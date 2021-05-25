@@ -6,6 +6,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>File Manager</title>
+  <style>
+    .files {
+      display: flex;
+    }
+
+    .file {
+      max-width: 150px;
+      min-width: 150px;
+      text-align: center;
+      display: inline;
+      margin: 5px;
+    }
+  </style>
 </head>
 
 <body>
@@ -18,6 +31,18 @@
     <br><br>
     <input type="submit" value="Save">
   </form>
+
+  <h3>Files:</h3>
+  <div class="files">
+    <div class="file" th:each="file : ${files}">
+      <img src="#" th:src="@{/images/file.png}" width="50" height="50" alt="file">
+      <br>
+      <span th:text="${file}"></span>
+      <br>
+      <a href="#">open</a>
+      <a href="#">zip</a>
+    </div>
+  </div>
 </body>
 
 </html>

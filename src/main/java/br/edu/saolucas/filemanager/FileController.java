@@ -21,7 +21,10 @@ public class FileController {
 	private String path;
 
 	@GetMapping
-	public String index() {
+	public String index(Model model) {
+		var files = new File(path);
+		var list = files.list();
+		model.addAttribute("files", list);
 		return "index";
 	}
 
