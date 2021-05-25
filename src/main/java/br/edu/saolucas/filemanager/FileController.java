@@ -8,9 +8,9 @@ import java.nio.file.Paths;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,14 +19,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
+@Validated
 public class FileController {
 
 	@Value("${file.path}")
 	private String path;
 
 	@GetMapping
-	public String index(@RequestParam(required = false) @NotBlank String name,
-			@RequestParam(required = false) @NotBlank @Size(max = 1000) String text, Model model) {
+	public String index(@RequestParam(required = false) String name,
+			@RequestParam(required = false) @Size(max = 1000) String text, Model model) {
 		var files = new File(path);
 		model.addAttribute("name", name);
 		model.addAttribute("text", text);
@@ -35,8 +36,7 @@ public class FileController {
 	}
 
 	@PostMapping(
-			path = "/submit",
-			consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE })
+			path = "/submit")
 	public String saveOrUpdate(@NotBlank String name, @NotBlank @Size(max = 1000) String text) {
 
 		try (var writer = new FileWriter(path + name.toLowerCase().replace(" ", "-") + ".txt")) {
