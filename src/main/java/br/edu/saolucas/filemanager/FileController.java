@@ -3,6 +3,8 @@ package br.edu.saolucas.filemanager;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/")
@@ -21,10 +25,12 @@ public class FileController {
 	private String path;
 
 	@GetMapping
-	public String index(Model model) {
+	public String index(@RequestParam(required = false) @NotBlank String name,
+			@RequestParam(required = false) @NotBlank @Size(max = 1000) String text, Model model) {
 		var files = new File(path);
-		var list = files.list();
-		model.addAttribute("files", list);
+		model.addAttribute("name", name);
+		model.addAttribute("text", text);
+		model.addAttribute("files", files.list());
 		return "index";
 	}
 
@@ -41,4 +47,19 @@ public class FileController {
 
 		return "redirect:/";
 	}
+
+	@GetMapping("/open/{fileName}")
+	public String openFile(@PathVariable String fileName) {
+		var file = new File(path + fileName);
+		if (file.exists()) {
+			try {
+				var text = Files.readString(Paths.get(path + fileName));
+				return "redirect:/?name=" + fileName.replace(".txt", "") + "&text=" + text;
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return "redirect:/";
+	}
+
 }

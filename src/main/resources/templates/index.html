@@ -18,6 +18,11 @@
       display: inline;
       margin: 5px;
     }
+
+    input:read-only {
+      background-color: rgb(233, 233, 233);
+      border: 1px solid black;
+    }
   </style>
 </head>
 
@@ -25,9 +30,9 @@
   <h3>File Manager</h3>
   <form action="#" th:action="@{/submit}" method="post">
     <p>File name:</p>
-    <input type="text" id="name" name="name" placeholder="Type file name">
+    <input type="text" th:value="*{name}" id="name" name="name" placeholder="Type file name" th:readonly="*{name}">
     <br><br>
-    <textarea id="text" name="text" placeholder="What you thinking?" cols="60" rows="10"></textarea>
+    <textarea id="text" th:text="*{text}" name="text" placeholder="What you thinking?" cols="60" rows="10"></textarea>
     <br><br>
     <input type="submit" value="Save">
   </form>
@@ -39,7 +44,7 @@
       <br>
       <span th:text="${file}"></span>
       <br>
-      <a href="#">open</a>
+      <a th:href="@{'/open/'+ ${file}}"> open</a>
       <a href="#">zip</a>
     </div>
   </div>
