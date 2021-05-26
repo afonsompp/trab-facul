@@ -9,6 +9,7 @@
   <style>
     .files {
       display: flex;
+      flex-wrap: wrap;
     }
 
     .file {
@@ -45,7 +46,14 @@
       <span th:text="${file}"></span>
       <br>
       <a th:href="@{'/open/'+ ${file}}"> open</a>
-      <a href="#">zip</a>
+      <a th:href="@{'/zip/'+ ${file}}">zip</a>
+    </div>
+    <div class="file" th:each="zip : ${zipFiles}">
+      <img src="#" th:src="@{/images/zip.png}" width="50" height="50" alt="zip file">
+      <br>
+      <span th:text="${zip}"></span>
+      <br>
+      <a th:href="@{'/unzip/'+ ${zip}}">unzip</a>
     </div>
   </div>
 </body>
